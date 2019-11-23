@@ -40,7 +40,7 @@ namespace TPlugins.Fly
                     }
                     UnturnedChat.Say(caller, main.Translate("Fly_changed_all"));
                 }
-                else if (args[0].ToLower() != "all")
+                else if (args[0].ToLower() != "all" && player.IsAdmin)
                 {
                     UnturnedPlayer target = UnturnedPlayer.FromName(args[0]);
                     if (target == null)
