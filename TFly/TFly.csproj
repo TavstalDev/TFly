@@ -14,6 +14,12 @@
     <Deterministic>true</Deterministic>
     <TargetFrameworkProfile />
   </PropertyGroup>
+  <PropertyGroup>
+    <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.*</AssemblyVersion>
+    <Deterministic>false</Deterministic>
+  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -93,7 +99,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="TLibrary">
       <HintPath>..\Libraries\TLibrary.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\Libraries\UnityEngine.dll</HintPath>
@@ -106,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandFlyAdmin.cs" />
+    <Compile Include="Commands\CommandVersion.cs" />
     <Compile Include="PlayerComponent.cs" />
     <Compile Include="TFly.cs" />
     <Compile Include="Commands\CommandFly.cs" />
