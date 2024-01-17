@@ -42,54 +42,6 @@ namespace Tavstal.TFly
                 comp.SetFlightMode(true);
                 comp.Cooldown = DateTime.Now.AddSeconds(TFly.Instance.Config.CooldownInSeconds);
             }
-
-            if (args.Length == 1)
-            {
-                if (args[0].ToLower() == "all" && player.HasPermission(TFly.Instance.Config.PermissionAdmin))
-                {
-                    foreach (SteamPlayer sp in Provider.clients)
-                    {
-                        UnturnedPlayer target = UnturnedPlayer.FromSteamPlayer(sp);
-                        TFlyComponent comp = target.GetComponent<TFlyComponent>();
-                        if (cp.isFlying)
-                        {
-                            cp.FlySpeed = config.DefaultSpeedInFly;
-                            main.FlyMode(target, false);
-                        }
-                        else if (!cp.isFlying)
-                        {
-                            cp.FlySpeed = config.DefaultSpeedInFly;
-                            main.FlyMode(target, true);
-                        }
-                    }
-                    UnturnedChat.Say(caller, main.Translate("Fly_changed_all"));
-                }
-                else if (args[0].ToLower() != "all" && player.HasPermission(config.PermissionAdmin))
-                {
-                    UnturnedPlayer target = UnturnedPlayer.FromName(args[0]);
-                    if (target == null)
-                    {
-                        UnturnedChat.Say(caller, main.Translate("Player_Not_Found", args[0].ToString()));
-                        return;
-                    }
-                    else
-                    {
-                        TFlyComponent cp = target.GetComponent<TFlyComponent>();
-                        if (cp.isFlying)
-                        {
-                            cp.FlySpeed = config.DefaultSpeedInFly;
-                            main.FlyMode(target, false);
-                            main.Cooldowns.Add(player.CSteamID, DateTime.Now.AddSeconds(config.CooldownInSeconds));
-                        }
-                        else if (!cp.isFlying)
-                        {
-                            cp.FlySpeed = config.DefaultSpeedInFly;
-                            main.FlyMode(target, true);
-                            main.Cooldowns.Add(player.CSteamID, DateTime.Now.AddSeconds(config.CooldownInSeconds));
-                        }
-                    }
-                }
-            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Tavstal.TFly
         public new static TLogger Logger = new TLogger("TFly", false);
         internal List<SteamPlayer> FlyingPlayers = new List<SteamPlayer>();
 
-        protected override void Load()
+        public override void OnLoad()
         {
             Instance = this;
             if (Config.DefaultFlySpeed < 0)
@@ -56,7 +56,7 @@ namespace Tavstal.TFly
             Logger.Log("# TFly has been loaded.");
         }
 
-        protected override void Unload()
+        public override void OnUnLoad()
         {
             PlayerInput.onPluginKeyTick -= KeyDown;
             try
@@ -129,24 +129,20 @@ namespace Tavstal.TFly
             }
         }
 
-        public override TranslationList DefaultTranslations
-        {
-            get
-            {
-                return new TranslationList(){
-                    { "prefix", "&e[TFly]" },
-                    { "success_fly_start", "&aYour flight mode has been &2enabled&a." },
-                    { "success_fly_stop", "&aYour flight mode has been &cdisabled&a." },
-                    { "success_fly_start_another", "&aYou have &2enabled &a{0}'s flight mode." },
-                    { "success_fly_stop_another", "&aYou have &cdisabled &a{0}'s flight mode." },
-                    { "success_fly_changed_all", "&aYou have changed everyone's flight mode." },
-                    { "error_player_not_found", "&cThe specified player was not found."},
-                    { "error_command_cooldown", "&cYou need to wait {0} second(s) to use this command." }
-                };
-            }
-        }
+        public override Dictionary<string, string> DefaultLocalization =>
+           new Dictionary<string, string>
+           {
+             { "prefix", "&e[TFly]" },
+             { "success_fly_start", "&aYour flight mode has been &2enabled&a." },
+             { "success_fly_stop", "&aYour flight mode has been &cdisabled&a." },
+             { "success_fly_start_another", "&aYou have &2enabled &a{0}'s flight mode." },
+             { "success_fly_stop_another", "&aYou have &cdisabled &a{0}'s flight mode." },
+             { "success_fly_changed_all", "&aYou have changed everyone's flight mode." },
+             { "error_player_not_found", "&cThe specified player was not found."},
+             { "error_command_cooldown", "&cYou need to wait {0} second(s) to use this command." }
+           };
 
-        public void Update()
+        private void Update()
         {
             foreach (SteamPlayer steamPlayer in Provider.clients)
             {
