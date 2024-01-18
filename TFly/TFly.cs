@@ -93,11 +93,7 @@ namespace Tavstal.TFly
 
                     if (Config.FlyAnimationEnabled)
                     {
-                        /*uPlayer.Player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
-                        {
-                        (byte)EPlayerStance.SWIM
-                        });*/
-                        player.stance.stance = EPlayerStance.SWIM;
+                        comp.UpdateStance(EPlayerStance.SWIM);
                     }
                 }
                 else if (key == 1 && state)
@@ -117,11 +113,7 @@ namespace Tavstal.TFly
 
                         if (Config.FlyAnimationEnabled)
                         {
-                            /*player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
-                            {
-                                (byte)EPlayerStance.SWIM
-                            });*/
-                            player.stance.stance = EPlayerStance.SWIM;
+                            comp.UpdateStance(EPlayerStance.SWIM);
                         }
 
                     }
@@ -159,11 +151,7 @@ namespace Tavstal.TFly
                 {
                     if (Config.FlyAnimationEnabled)
                     {
-                        /*player.Player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
-                        {
-                        (byte)EPlayerStance.SWIM
-                        });*/
-                        player.Player.stance.stance = EPlayerStance.SWIM;
+                        player.GetComponent<TFlyComponent>().UpdateStance(EPlayerStance.SWIM);
                     }
                     player.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
                 }

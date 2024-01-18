@@ -40,11 +40,7 @@ namespace Tavstal.TFly
 
                 if (TFly.Instance.Config.FlyAnimationEnabled)
                 {
-                    /*Player.Player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
-                    {
-                        (byte)EPlayerStance.STAND
-                    });*/
-                    Player.Player.stance.stance = EPlayerStance.STAND;
+                    UpdateStance(EPlayerStance.STAND);
                 }
                 UChatHelper.ServerSendChatMessage("success_fly_stop", toPlayer: Player.SteamPlayer());
             }
@@ -59,14 +55,20 @@ namespace Tavstal.TFly
 
                 if (TFly.Instance.Config.FlyAnimationEnabled)
                 {
-                    /*Player.Player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
-                    {
-                        (byte)EPlayerStance.SWIM
-                    });*/
-                    Player.Player.stance.stance = EPlayerStance.SWIM;
+                    UpdateStance(EPlayerStance.SWIM);
                 }
                 UChatHelper.ServerSendChatMessage("success_fly_start", toPlayer: Player.SteamPlayer());
             }
+        }
+
+        public void UpdateStance(EPlayerStance newStance)
+        {
+            /*Player.Player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
+            {
+               (byte)newStance
+            });*/
+            //Player.Player.stance.stance = newStance;
+            Player.Player.stance.ReceiveStance(newStance);
         }
     }
 }

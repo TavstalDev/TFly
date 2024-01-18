@@ -113,7 +113,7 @@
   <ItemGroup>
     <Compile Include="Commands\CommandFlyAdmin.cs" />
     <Compile Include="Commands\CommandVersion.cs" />
-    <Compile Include="PlayerComponent.cs" />
+    <Compile Include="TFlyComponent.cs" />
     <Compile Include="TFly.cs" />
     <Compile Include="Commands\CommandFly.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
