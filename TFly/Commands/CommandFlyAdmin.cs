@@ -87,33 +87,5 @@ namespace Tavstal.TFly
             UChatHelper.SendCommandReply(Plugin, caller, "success_fly_changed_all");
             return true;
         }
-
-        public void Execute(IRocketPlayer caller, string[] args)
-        {
-            UnturnedPlayer player = (UnturnedPlayer)caller;
-            TFlyComponent comp = player.GetComponent<TFlyComponent>();
-
-            if (DateTime.Now < comp.Cooldown && !player.HasPermission(TFly.Instance.Config.PermissionAdmin))
-            {
-                UChatHelper.SendCommandReply(TFly.Instance, caller, "error_command_cooldown", Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
-                return;
-            }
-
-            TFlyComponent cp = player.GetComponent<TFlyComponent>();
-
-            if (cp.IsFlying)
-            {
-                comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-                comp.SetFlightMode(false);
-                comp.Cooldown = DateTime.Now.AddSeconds(TFly.Instance.Config.CooldownInSeconds);
-            }
-            else
-            {
-                comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-                comp.SetFlightMode(true);
-                comp.Cooldown = DateTime.Now.AddSeconds(TFly.Instance.Config.CooldownInSeconds);
-            }
-
-        }
     }
 }
