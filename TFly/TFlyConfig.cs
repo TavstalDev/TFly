@@ -39,5 +39,8 @@ namespace Tavstal.TFly
             Permission = "TFly.Fly";
             PermissionAdmin = "TFly.Fly.Admin";
         }
+
+        public TFlyConfig() { }
+        public TFlyConfig(string fileName, string path) : base(fileName, path) { }
     }
 }
