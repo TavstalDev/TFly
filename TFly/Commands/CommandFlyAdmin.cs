@@ -16,7 +16,7 @@ namespace Tavstal.TFly
         public override string Help => "Moderates flight mode";
         public override string Syntax => "[player] <enable/disable/on/off> | all <enable/disable/on/off>";
         public override List<string> Aliases => new List<string>() { "flya", "flighta", "flightadmin" };
-        public override List<string> Permissions => new List<string> { TFly.Instance.Config.PermissionAdmin };
+        public override List<string> Permissions => new List<string> { "tfly.commands.flyadmin" };
         public override List<SubCommand> SubCommands => new List<SubCommand>()
         {
             new SubCommand("all", "Changes everyone's flight mode,", "all <enable/disable/on/off>", new List<string>(), new List<string>(), 

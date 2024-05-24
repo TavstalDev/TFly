@@ -1,6 +1,7 @@
 ﻿using Rocket.API;
 using System.Collections.Generic;
 using System.Reflection;
+using Tavstal.TLibrary.Helpers.Unturned;
 
 namespace Tavstal.TFly.Commands
 {
@@ -16,10 +17,10 @@ namespace Tavstal.TFly.Commands
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
-            TFly.Logger.Log("#########################################");
-            TFly.Logger.Log(string.Format("# Build Version: {0}", TFly.Version));
-            TFly.Logger.Log(string.Format("# Build Date: {0}", TFly.BuildDate));
-            TFly.Logger.Log("#########################################");
+            TFly.Instance.SendPlainCommandReply(caller, "#########################################");
+            TFly.Instance.SendPlainCommandReply(caller, string.Format("# Build Version: {0}", TFly.Version));
+            TFly.Instance.SendPlainCommandReply(caller, string.Format("# Build Date: {0}", TFly.BuildDate));
+            TFly.Instance.SendPlainCommandReply(caller, "#########################################");
         }
     }
 }

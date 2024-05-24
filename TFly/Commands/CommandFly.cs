@@ -13,14 +13,14 @@ namespace Tavstal.TFly
         public string Help => "Toggles flight mode";
         public string Syntax => "";
         public List<string> Aliases => new List<string>() { "flight" };
-        public List<string> Permissions => new List<string> { TFly.Instance.Config.Permission, TFly.Instance.Config.PermissionAdmin };
+        public List<string> Permissions => new List<string> { "tfly.commands.fly", "tfly.commands.fly.admin" };
 
         public void Execute(IRocketPlayer caller, string[] args)
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
             TFlyComponent comp = player.GetComponent<TFlyComponent>();
 
-            if (DateTime.Now < comp.Cooldown && !player.HasPermission(TFly.Instance.Config.PermissionAdmin))
+            if (DateTime.Now < comp.Cooldown && !player.HasPermission("tfly.commands.fly.admin"))
             {
                 UChatHelper.SendCommandReply(TFly.Instance, caller, "error_command_cooldown", Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
                 return;
