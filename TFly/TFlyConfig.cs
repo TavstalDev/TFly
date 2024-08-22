@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Tavstal.TLibrary.Compatibility;
+using Tavstal.TLibrary.Models.Plugin;
 using UnityEngine;
 
 namespace Tavstal.TFly
@@ -23,7 +23,7 @@ namespace Tavstal.TFly
         [JsonIgnore]
         public readonly float Gravity = 0f;
 
-        public override void LoadDefaults()
+        public new void LoadDefaults()
         {
             FlyAnimationEnabled = true;
             GodModeWhenFlyEnabled = true;

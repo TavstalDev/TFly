@@ -1,10 +1,9 @@
 ﻿using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System.Collections.Generic;
-using Tavstal.TLibrary.Compatibility;
+using Tavstal.TLibrary.Models.Plugin;
 using Tavstal.TLibrary.Extensions;
 using UnityEngine;
-using Logger = Rocket.Core.Logging.Logger;
 
 namespace Tavstal.TFly
 {
@@ -62,7 +61,7 @@ namespace Tavstal.TFly
                         comp.SetFlightMode(false);
                     }
                 }
-            } catch { }
+            } catch { /* ignore */ }
             Logger.Log("# TShop has been successfully unloaded.");
 
         }

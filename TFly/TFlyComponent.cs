@@ -11,9 +11,9 @@ namespace Tavstal.TFly
         public float FlySpeed { get; private set; }
         public DateTime Cooldown = DateTime.Now;
 
-        public void SetIsFlying(bool enabled)
+        public void SetIsFlying(bool isFlying)
         {
-            IsFlying = enabled;
+            IsFlying = isFlying;
         }
 
         public void SetFlySpeed(float speed)
@@ -21,7 +21,7 @@ namespace Tavstal.TFly
             FlySpeed = speed;
         }
 
-        public void SetFlightMode(bool enabled)
+        public void SetFlightMode(bool enable)
         {
             float flyspeed = TFly.Instance.Config.DefaultFlySpeed;
             if (FlySpeed != 0)
@@ -29,7 +29,7 @@ namespace Tavstal.TFly
                 flyspeed = FlySpeed;
             }
 
-            if (IsFlying && !enabled)
+            if (IsFlying && !enable)
             {
                 IsFlying = false;
                 Player.Player.movement.sendPluginGravityMultiplier(1f);
@@ -44,7 +44,7 @@ namespace Tavstal.TFly
                 }
                 UChatHelper.ServerSendChatMessage("success_fly_stop", toPlayer: Player.SteamPlayer());
             }
-            else if (!IsFlying && enabled)
+            else if (!IsFlying && enable)
             {
                 IsFlying = true;
                 Player.Player.movement.sendPluginGravityMultiplier(TFly.Instance.Config.Gravity);

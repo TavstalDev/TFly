@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Tavstal.TLibrary.Helpers.Unturned;
 
-namespace Tavstal.TFly
+namespace Tavstal.TFly.Commands
 {
     public class CommandFly : IRocketCommand
     {

@@ -1,26 +1,27 @@
-﻿using Rocket.API;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Rocket.API;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using System.Collections.Generic;
-using Tavstal.TLibrary.Compatibility;
-using Tavstal.TLibrary.Compatibility.Interfaces;
 using Tavstal.TLibrary.Helpers.Unturned;
+using Tavstal.TLibrary.Models.Commands;
+using Tavstal.TLibrary.Models.Plugin;
 
-namespace Tavstal.TFly
+namespace Tavstal.TFly.Commands
 {
     public class CommandFlyAdmin : CommandBase
     {
-        public override IPlugin Plugin => TFly.Instance; 
+        protected override IPlugin Plugin => TFly.Instance; 
         public override AllowedCaller AllowedCaller => AllowedCaller.Both;
         public override string Name => "flyadmin";
         public override string Help => "Moderates flight mode";
         public override string Syntax => "[player] <enable/disable/on/off> | all <enable/disable/on/off>";
-        public override List<string> Aliases => new List<string>() { "flya", "flighta", "flightadmin" };
+        public override List<string> Aliases => new List<string> { "flya", "flighta", "flightadmin" };
         public override List<string> Permissions => new List<string> { "tfly.commands.flyadmin" };
-        public override List<SubCommand> SubCommands => new List<SubCommand>()
+        protected override List<SubCommand> SubCommands => new List<SubCommand>
         {
             new SubCommand("all", "Changes everyone's flight mode,", "all <enable/disable/on/off>", new List<string>(), new List<string>(), 
-                (IRocketPlayer caller, string[] args) =>
+                (caller, args) =>
                 {
                     bool? flyMode = null;
                     if (args.Length == 2)
@@ -54,19 +55,20 @@ namespace Tavstal.TFly
                             }
                         }
                     }
-                    UChatHelper.SendCommandReply(Plugin, caller, "success_fly_changed_all");
+                    Plugin.SendCommandReply(caller, "success_fly_changed_all");
+                    return Task.CompletedTask;
                 })
         };
-        public override bool ExecutionRequested(IRocketPlayer caller, string[] args)
+        protected override Task<bool> ExecutionRequested(IRocketPlayer caller, string[] args)
         {
             if (args.Length > 2 || args.Length == 0)
-                return false;
+                return Task.FromResult(false);
 
             UnturnedPlayer targetPlayer = UnturnedPlayer.FromName(args[0]);
             if (targetPlayer == null)
             {
-                UChatHelper.SendCommandReply(Plugin, caller, "error_player_not_found", args[0].ToString());
-                return false;
+                Plugin.SendCommandReply(caller, "error_player_not_found", args[0]);
+                return Task.FromResult(false);
             }
 
             TFlyComponent comp = targetPlayer.GetComponent<TFlyComponent>();
@@ -80,8 +82,8 @@ namespace Tavstal.TFly
             }
             comp.SetFlightMode(flyMode);
             comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-            UChatHelper.SendCommandReply(Plugin, caller, "success_fly_changed_all");
-            return true;
+            Plugin.SendCommandReply(caller, "success_fly_changed_all");
+            return Task.FromResult(true);
         }
     }
 }
