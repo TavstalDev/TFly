@@ -23,7 +23,7 @@ namespace Tavstal.TFly
         [JsonIgnore]
         public readonly float Gravity = 0f;
 
-        public new void LoadDefaults()
+        public override void LoadDefaults()
         {
             FlyAnimationEnabled = true;
             GodModeWhenFlyEnabled = true;
