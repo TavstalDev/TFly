@@ -25,6 +25,9 @@ namespace Tavstal.TFly
 
         public override void LoadDefaults()
         {
+            DebugMode = false;
+            Locale = "en";
+            DownloadLocalePacks = true;
             FlyAnimationEnabled = true;
             GodModeWhenFlyEnabled = true;
             AscendFlySpeedKeyCode = KeyCode.RightArrow;
