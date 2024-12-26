@@ -18,15 +18,15 @@ namespace Tavstal.TFly.Commands
         public void Execute(IRocketPlayer caller, string[] args)
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
-            TFlyComponent comp = player.GetComponent<TFlyComponent>();
+            FlyComponent comp = player.GetComponent<FlyComponent>();
 
             if (DateTime.Now < comp.Cooldown && !player.HasPermission("tfly.commands.fly.admin"))
             {
-                UChatHelper.SendCommandReply(TFly.Instance, caller, "error_command_cooldown", Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
+                TFly.Instance.SendCommandReply(caller, "error_command_cooldown", Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
                 return;
             }
 
-            TFlyComponent cp = player.GetComponent<TFlyComponent>();
+            FlyComponent cp = player.GetComponent<FlyComponent>();
 
             if (cp.IsFlying)
             {

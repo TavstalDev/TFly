@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Tavstal.TFly
 {
-    public class TFlyConfig : ConfigurationBase
+    public class FlyConfig : ConfigurationBase
     {
         [JsonProperty(Order = 3)]
         public bool FlyAnimationEnabled;
@@ -37,7 +37,7 @@ namespace Tavstal.TFly
             FlyUpSpeed = 0.3f;
         }
 
-        public TFlyConfig() { }
-        public TFlyConfig(string fileName, string path) : base(fileName, path) { }
+        public FlyConfig() { }
+        public FlyConfig(string fileName, string path) : base(fileName, path) { }
     }
 }

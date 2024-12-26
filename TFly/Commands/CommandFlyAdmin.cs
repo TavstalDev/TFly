@@ -35,7 +35,7 @@ namespace Tavstal.TFly.Commands
                     foreach (SteamPlayer steamPlayer in Provider.clients)
                     {
                         UnturnedPlayer target = UnturnedPlayer.FromSteamPlayer(steamPlayer);
-                        TFlyComponent comp = target.GetComponent<TFlyComponent>();
+                        FlyComponent comp = target.GetComponent<FlyComponent>();
                         if (flyMode != null)
                         {
                             comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
@@ -71,7 +71,7 @@ namespace Tavstal.TFly.Commands
                 return Task.FromResult(false);
             }
 
-            TFlyComponent comp = targetPlayer.GetComponent<TFlyComponent>();
+            FlyComponent comp = targetPlayer.GetComponent<FlyComponent>();
             bool flyMode = !comp.IsFlying;
             if (args.Length == 2)
             {

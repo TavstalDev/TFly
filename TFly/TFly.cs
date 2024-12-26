@@ -7,11 +7,11 @@ using UnityEngine;
 
 namespace Tavstal.TFly
 {
-    public class TFly : PluginBase<TFlyConfig>
+    // ReSharper disable once InconsistentNaming
+    public class TFly : PluginBase<FlyConfig>
     {
-        public new static TFly Instance { get; private set; }
-        public new static TLogger Logger = new TLogger("TFly", false);
-        internal List<SteamPlayer> FlyingPlayers = new List<SteamPlayer>();
+        public static TFly Instance { get; private set; }
+        private List<SteamPlayer> _flyingPlayers = new List<SteamPlayer>();
 
         public override void OnLoad()
         {
@@ -41,8 +41,8 @@ namespace Tavstal.TFly
             Logger.Log("# Website: https://redstoneplugins.com");
             Logger.Log("# Discord: https://discord.gg/redstoneplugins");
             Logger.Log("#########################################");
-            Logger.Log(string.Format("# Build Version: {0}", Version));
-            Logger.Log(string.Format("# Build Date: {0}", BuildDate));
+            Logger.Log($"# Build Version: {Version}");
+            Logger.Log($"# Build Date: {BuildDate}");
             Logger.Log("#########################################");
             Logger.Log("# TFly has been loaded.");
         }
@@ -52,10 +52,10 @@ namespace Tavstal.TFly
             PlayerInput.onPluginKeyTick -= KeyDown;
             try
             {
-                foreach (SteamPlayer steamPlayer in FlyingPlayers)
+                foreach (SteamPlayer steamPlayer in _flyingPlayers)
                 {
                     UnturnedPlayer player = UnturnedPlayer.FromSteamPlayer(steamPlayer);
-                    TFlyComponent comp = player.GetComponent<TFlyComponent>();
+                    FlyComponent comp = player.GetComponent<FlyComponent>();
                     if (comp.IsFlying)
                     {
                         comp.SetFlightMode(false);
@@ -63,13 +63,13 @@ namespace Tavstal.TFly
                 }
             } catch { /* ignore */ }
             Logger.Log("# TShop has been successfully unloaded.");
-
+            _flyingPlayers = new List<SteamPlayer>();
         }
 
         public void KeyDown(Player player, uint simulation, byte key, bool state)
         {
             UnturnedPlayer uPlayer = UnturnedPlayer.FromPlayer(player);
-            TFlyComponent comp = uPlayer.GetComponent<TFlyComponent>();
+            FlyComponent comp = uPlayer.GetComponent<FlyComponent>();
 
             if (comp.IsFlying)
             {
@@ -142,7 +142,7 @@ namespace Tavstal.TFly
                 {
                     if (Config.FlyAnimationEnabled)
                     {
-                        player.GetComponent<TFlyComponent>().UpdateStance(EPlayerStance.SWIM);
+                        player.GetComponent<FlyComponent>().UpdateStance(EPlayerStance.SWIM);
                     }
                     player.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
                 }

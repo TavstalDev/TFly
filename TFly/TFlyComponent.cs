@@ -5,7 +5,7 @@ using Tavstal.TLibrary.Helpers.Unturned;
 
 namespace Tavstal.TFly
 {
-    public class TFlyComponent : UnturnedPlayerComponent
+    public class FlyComponent : UnturnedPlayerComponent
     {
         public bool IsFlying { get; private set; }
         public float FlySpeed { get; private set; }

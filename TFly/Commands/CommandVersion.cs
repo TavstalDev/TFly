@@ -18,8 +18,8 @@ namespace Tavstal.TFly.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             TFly.Instance.SendPlainCommandReply(caller, "#########################################");
-            TFly.Instance.SendPlainCommandReply(caller, string.Format("# Build Version: {0}", TFly.Version));
-            TFly.Instance.SendPlainCommandReply(caller, string.Format("# Build Date: {0}", TFly.BuildDate));
+            TFly.Instance.SendPlainCommandReply(caller, $"# Build Version: {TFly.Version}");
+            TFly.Instance.SendPlainCommandReply(caller, $"# Build Date: {TFly.BuildDate}");
             TFly.Instance.SendPlainCommandReply(caller, "#########################################");
         }
     }
