@@ -49,7 +49,7 @@ namespace Tavstal.TFly
 
         public override void OnUnLoad()
         {
-            PlayerInput.onPluginKeyTick -= KeyDown;
+            PlayerInput.onPluginKeyTick -= OnKeyDown;
             try
             {
                 foreach (SteamPlayer steamPlayer in _flyingPlayers)
@@ -57,16 +57,14 @@ namespace Tavstal.TFly
                     UnturnedPlayer player = UnturnedPlayer.FromSteamPlayer(steamPlayer);
                     FlyComponent comp = player.GetComponent<FlyComponent>();
                     if (comp.IsFlying)
-                    {
                         comp.SetFlightMode(false);
-                    }
                 }
             } catch { /* ignore */ }
             Logger.Log("# TShop has been successfully unloaded.");
             _flyingPlayers = new List<SteamPlayer>();
         }
 
-        public void KeyDown(Player player, uint simulation, byte key, bool state)
+        public void OnKeyDown(Player player, uint simulation, byte key, bool state)
         {
             UnturnedPlayer uPlayer = UnturnedPlayer.FromPlayer(player);
             FlyComponent comp = uPlayer.GetComponent<FlyComponent>();
@@ -131,23 +129,17 @@ namespace Tavstal.TFly
             {
                 UnturnedPlayer player = UnturnedPlayer.FromSteamPlayer(steamPlayer);
                 if (player.Player.input.keys[0])
-                {
                     player.Player.movement.transform.position = new Vector3(player.Position.x, player.Position.y + Config.FlyUpSpeed, player.Position.z);
-                }
                 else if (player.Player.input.keys[5])
-                {
                     player.Player.movement.sendPluginGravityMultiplier(1f);
-                }
                 else
                 {
                     if (Config.FlyAnimationEnabled)
-                    {
                         player.GetComponent<FlyComponent>().UpdateStance(EPlayerStance.SWIM);
-                    }
                     player.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
                 }
 
-                // The player might broke their leg when landing
+                // The player might break their leg when landing
                 if (player.Broken)
                     player.Heal(10, null, false);
             }

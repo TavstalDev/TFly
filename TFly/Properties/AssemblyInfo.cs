@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("TFly")]
-[assembly: AssemblyDescription("Basic flight rocketMod plugin for Unturned.")]
+[assembly: AssemblyDescription("This plugin allows players to defy gravity and take flight.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tavstal")]
 [assembly: AssemblyProduct("TFly")]
-[assembly: AssemblyCopyright("Copyright © 2024 Tavstal")]
+[assembly: AssemblyCopyright("Copyright © 2025 Tavstal")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("en")]
 

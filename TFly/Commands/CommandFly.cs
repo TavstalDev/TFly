@@ -32,13 +32,13 @@ namespace Tavstal.TFly.Commands
             {
                 comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
                 comp.SetFlightMode(false);
-                comp.Cooldown = DateTime.Now.AddSeconds(TFly.Instance.Config.CooldownInSeconds);
+                comp.UpdateCooldown();
             }
             else
             {
                 comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
                 comp.SetFlightMode(true);
-                comp.Cooldown = DateTime.Now.AddSeconds(TFly.Instance.Config.CooldownInSeconds);
+                comp.UpdateCooldown();
             }
         }
     }

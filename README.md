@@ -8,6 +8,7 @@ This plugin allows players to defy gravity and take flight.
 
 ### Features
 * Flying
+* Flight Speed Control
 
 ### Commands
 | - means <b>or</b></br>
