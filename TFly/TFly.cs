@@ -2,8 +2,10 @@
 using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System.Collections.Generic;
+using System.Text;
 using Tavstal.TLibrary.Models.Plugin;
 using Tavstal.TLibrary.Extensions;
+using Tavstal.TLibrary.Models.Logging;
 using UnityEngine;
 
 namespace Tavstal.TFly
@@ -11,63 +13,85 @@ namespace Tavstal.TFly
     // ReSharper disable once InconsistentNaming
     public class TFly : PluginBase<FlyConfig>
     {
-        public static TFly Instance { get; private set; }
-        private List<SteamPlayer> _flyingPlayers = new List<SteamPlayer>();
+        public static TFly Instance { get; private set; } = null!;
 
-        public override void OnLoad()
+        public override void OnPreLoad()
         {
             Instance = this;
-            if (Config.DefaultFlySpeed < 0)
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("────────────────────────────────────────────────────────");
+            sb.AppendLine();
+            sb.AppendLine("████████╗███████╗██╗  ██╗   ██╗");
+            sb.AppendLine("╚══██╔══╝██╔════╝██║  ╚██╗ ██╔╝");
+            sb.AppendLine("   ██║   █████╗  ██║   ╚████╔╝ ");
+            sb.AppendLine("   ██║   ██╔══╝  ██║    ╚██╔╝  ");
+            sb.AppendLine("   ██║   ██║     ███████╗██║   ");
+            sb.AppendLine("   ╚═╝   ╚═╝     ╚══════╝╚═╝   ");
+            sb.AppendLine();
+            sb.AppendLine("[ About ]");
+            sb.AppendLine(" ▸ Developer : Tavstal");
+            sb.AppendLine(" ▸ Discord   : @Tavstal");
+            sb.AppendLine(" ▸ Website   : https://redstoneplugins.com");
+            sb.AppendLine(" ▸ GitHub    : https://github.com/TavstalDev");
+            sb.AppendLine();
+            sb.AppendLine("[ Build ]");
+            sb.AppendLine($" ▸ Version   : {Version}");
+            sb.AppendLine($" ▸ Build Date: {BuildDate} UTC");
+            sb.AppendLine($" ▸ TLibrary  : {LibraryVersion}");
+            sb.AppendLine();
+            sb.AppendLine("[ Support ]");
+            sb.AppendLine(" ▸ Report issues or request features:");
+            sb.AppendLine(" ▸ https://github.com/TavstalDev/TShop2/issues");
+            sb.AppendLine();
+            sb.AppendLine("────────────────────────────────────────────────────────");
+            Logger.Log(ELogLevel.COMMAND, sb.ToString(), includePrefixes: false, color:  ConsoleColor.Cyan);
+        }
+        
+        public override void OnLoad()
+        {
+            try
             {
-                Config.DefaultFlySpeed = 10;
-                Config.SaveConfig();
-                
+                if (Config.DefaultFlySpeed < 0)
+                {
+                    Config.DefaultFlySpeed = 10;
+                    Config.Save();
+
+                }
+
+                if (Config.FlyUpSpeed > 1 || Config.FlyUpSpeed < 0)
+                {
+                    Config.FlyUpSpeed = 0.5f;
+                    Config.Save();
+                }
+
+                Logger.Info($"# {GetPluginName()} has been loaded.");
             }
-            if (Config.FlyUpSpeed > 1 || Config.FlyUpSpeed < 0)
+            catch (Exception ex)
             {
-                Config.FlyUpSpeed = 0.5f;
-                Config.SaveConfig();
+                Logger.Error($"# Failed to load {GetPluginName()}...", ex);
             }
-            
-            Logger.Log("████████╗███████╗██╗  ██╗   ██╗", ConsoleColor.Cyan, prefix: null);
-            Logger.Log("╚══██╔══╝██╔════╝██║  ╚██╗ ██╔╝", ConsoleColor.Cyan, prefix: null);
-            Logger.Log("   ██║   █████╗  ██║   ╚████╔╝ ", ConsoleColor.Cyan, prefix: null);
-            Logger.Log("   ██║   ██╔══╝  ██║    ╚██╔╝  ", ConsoleColor.Cyan, prefix: null);
-            Logger.Log("   ██║   ██║     ███████╗██║   ", ConsoleColor.Cyan, prefix: null);
-            Logger.Log("   ╚═╝   ╚═╝     ╚══════╝╚═╝   ", ConsoleColor.Cyan, prefix: null);
-            Logger.Log("#########################################", prefix: null);
-            Logger.Log("#       Thanks for using this plugin!   #", prefix: null);
-            Logger.Log("#########################################", prefix: null);
-            Logger.Log("# Developed By: Tavstal", prefix: null);
-            Logger.Log("# Discord:      @Tavstal", prefix: null);
-            Logger.Log("# Website:      https://redstoneplugins.com", prefix: null);
-            Logger.Log("# My GitHub:    https://tavstaldev.github.io", prefix: null);
-            Logger.Log("#########################################", prefix: null);
-            Logger.Log($"# Plugin Version:    {Version}", prefix: null);
-            Logger.Log($"# Build Date:        {BuildDate}", prefix: null);
-            Logger.Log($"# TLibrary Version:  {LibraryVersion}", prefix: null);
-            Logger.Log("#########################################", prefix: null);
-            Logger.Log("# Found an issue or have a suggestion?", prefix: null);
-            Logger.Log("# Report it here: https://github.com/TavstalDev/TFly/issues", prefix: null); 
-            Logger.Log("#########################################", prefix: null);
-            Logger.Log("# TFly has been loaded.");
         }
 
         public override void OnUnLoad()
         {
             PlayerInput.onPluginKeyTick -= OnKeyDown;
-            try
+            
+            foreach (SteamPlayer steamPlayer in Provider.clients)
             {
-                foreach (SteamPlayer steamPlayer in _flyingPlayers)
+                try
                 {
                     UnturnedPlayer player = UnturnedPlayer.FromSteamPlayer(steamPlayer);
                     FlyComponent comp = player.GetComponent<FlyComponent>();
                     if (comp.IsFlying)
                         comp.SetFlightMode(false);
                 }
-            } catch { /* ignore */ }
-            Logger.Log("# TShop has been successfully unloaded.");
-            _flyingPlayers = new List<SteamPlayer>();
+                catch
+                {
+                    /* ignore */
+                }
+            }
+            
+            Logger.Info($"# {GetPluginName()} has been successfully unloaded.");
         }
 
         public void OnKeyDown(Player player, uint simulation, byte key, bool state)
@@ -75,9 +99,16 @@ namespace Tavstal.TFly
             UnturnedPlayer uPlayer = UnturnedPlayer.FromPlayer(player);
             FlyComponent comp = uPlayer.GetComponent<FlyComponent>();
 
-            if (comp.IsFlying)
+            if (!comp.IsFlying)
+                return;
+
+            if (!state)
+                return;
+            
+            
+            switch (key)
             {
-                if (key == 0 && state)
+                case 0:
                 {
                     comp.SetFlySpeed(comp.FlySpeed + 1);
                     uPlayer.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
@@ -87,31 +118,29 @@ namespace Tavstal.TFly
                         uPlayer.GodMode = true;
 
                     if (Config.FlyAnimationEnabled)
-                    {
                         comp.UpdateStance(EPlayerStance.SWIM);
-                    }
+                    return;
                 }
-                else if (key == 1 && state)
+                case 1:
                 {
-                    if (comp.FlySpeed - 1 > 1)
-                    {
-                        if (comp.FlySpeed <= 0)
-                            comp.SetFlySpeed(Config.DefaultFlySpeed);
-                        else
-                            comp.SetFlySpeed(comp.FlySpeed - 1);
+                    if (comp.FlySpeed - 1 < 1)
+                        return;
 
-                        player.movement.sendPluginGravityMultiplier(Config.Gravity);
-                        player.movement.sendPluginSpeedMultiplier(comp.FlySpeed);
+                    if (comp.FlySpeed <= 0)
+                        comp.SetFlySpeed(Config.DefaultFlySpeed);
+                    else
+                        comp.SetFlySpeed(comp.FlySpeed - 1);
 
-                        if (Config.GodModeWhenFlyEnabled)
-                            uPlayer.GodMode = true;
+                    player.movement.sendPluginGravityMultiplier(Config.Gravity);
+                    player.movement.sendPluginSpeedMultiplier(comp.FlySpeed);
 
-                        if (Config.FlyAnimationEnabled)
-                        {
-                            comp.UpdateStance(EPlayerStance.SWIM);
-                        }
+                    if (Config.GodModeWhenFlyEnabled)
+                        uPlayer.GodMode = true;
 
-                    }
+                    if (Config.FlyAnimationEnabled)
+                        comp.UpdateStance(EPlayerStance.SWIM);
+
+                    break;
                 }
             }
         }
