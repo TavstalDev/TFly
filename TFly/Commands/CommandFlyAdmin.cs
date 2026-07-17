@@ -6,30 +6,41 @@ using SDG.Unturned;
 using Tavstal.TLibrary.Helpers.Unturned;
 using Tavstal.TLibrary.Models.Commands;
 using Tavstal.TLibrary.Models.Plugin;
+// ReSharper disable UnusedType.Global
 
 namespace Tavstal.TFly.Commands
 {
-    public class CommandFlyAdmin : CommandBase
+    public class CommandFlyAdmin : CustomCommandBase
     {
-        protected override IPlugin Plugin => TFly.Instance; 
+        public override IPlugin Plugin => TFly.Instance;
+        public override bool UseBackgroundThread => false;
+
         public override AllowedCaller AllowedCaller => AllowedCaller.Both;
         public override string Name => "flyadmin";
         public override string Help => "Moderates flight mode";
         public override string Syntax => "[player] <enable/disable/on/off> | all <enable/disable/on/off>";
         public override List<string> Aliases => new List<string> { "flya", "flighta", "flightadmin" };
         public override List<string> Permissions => new List<string> { "tfly.commands.flyadmin" };
-        protected override List<SubCommand> SubCommands => new List<SubCommand>
+        public override List<ISubcommand> SubCommands => new List<ISubcommand>
         {
             new SubCommand("all", "Changes everyone's flight mode,", "all <enable/disable/on/off>", new List<string>(), new List<string>(), 
+                Plugin, AllowedCaller,
                 (caller, args) =>
                 {
                     bool? flyMode = null;
                     if (args.Length == 2)
                     {
-                        if (args[1].ToLower() == "disable" || args[1].ToLower() == "off")
-                            flyMode = false;
-                        else if (args[1].ToLower() == "enable" || args[1].ToLower() == "on")
-                            flyMode = true;
+                        switch (args[1].ToLower())
+                        {
+                            case "disable":
+                            case "off":
+                                flyMode = false;
+                                break;
+                            case "enable":
+                            case "on":
+                                flyMode = true;
+                                break;
+                        }
                     }
 
                     foreach (SteamPlayer steamPlayer in Provider.clients)
@@ -40,50 +51,57 @@ namespace Tavstal.TFly.Commands
                         {
                             comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
                             comp.SetIsFlying(flyMode.Value);
+                            continue;
                         }
-                        else
+
+                        if (comp.IsFlying)
                         {
-                            if (comp.IsFlying)
-                            {
-                                comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-                                comp.SetIsFlying(false);
-                            }
-                            else
-                            {
-                                comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-                                comp.SetIsFlying(true);
-                            }
+                            comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
+                            comp.SetIsFlying(false);
+                            continue;
                         }
+
+                        comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
+                        comp.SetIsFlying(true);
                     }
                     Plugin.SendCommandReply(caller, "success_fly_changed_all");
                     return Task.CompletedTask;
                 })
         };
-        protected override Task<bool> ExecutionRequested(IRocketPlayer caller, string[] args)
+
+
+        protected override bool HandleExecute(IRocketPlayer caller, string[] args)
         {
             if (args.Length > 2 || args.Length == 0)
-                return Task.FromResult(false);
+                return false;
 
             UnturnedPlayer targetPlayer = UnturnedPlayer.FromName(args[0]);
             if (targetPlayer == null)
             {
                 Plugin.SendCommandReply(caller, "error_player_not_found", args[0]);
-                return Task.FromResult(false);
+                return true;
             }
 
             FlyComponent comp = targetPlayer.GetComponent<FlyComponent>();
             bool flyMode = !comp.IsFlying;
             if (args.Length == 2)
             {
-                if (args[1].ToLower() == "disable" || args[1].ToLower() == "off")
-                    flyMode = false;
-                else if (args[1].ToLower() == "enable" || args[1].ToLower() == "on")
-                    flyMode = true;
+                switch (args[1].ToLower())
+                {
+                    case "disable":
+                    case "off":
+                        flyMode = false;
+                        break;
+                    case "enable":
+                    case "on":
+                        flyMode = true;
+                        break;
+                }
             }
             comp.SetFlightMode(flyMode);
             comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
             Plugin.SendCommandReply(caller, "success_fly_changed_all");
-            return Task.FromResult(true);
+            return true;
         }
     }
 }

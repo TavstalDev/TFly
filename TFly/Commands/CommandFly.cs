@@ -3,6 +3,7 @@ using Rocket.Unturned.Player;
 using System;
 using System.Collections.Generic;
 using Tavstal.TLibrary.Helpers.Unturned;
+// ReSharper disable UnusedType.Global
 
 namespace Tavstal.TFly.Commands
 {
@@ -33,13 +34,12 @@ namespace Tavstal.TFly.Commands
                 comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
                 comp.SetFlightMode(false);
                 comp.UpdateCooldown();
+                return;
             }
-            else
-            {
-                comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-                comp.SetFlightMode(true);
-                comp.UpdateCooldown();
-            }
+           
+            comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
+            comp.SetFlightMode(true);
+            comp.UpdateCooldown();
         }
     }
 }
