@@ -1,37 +1,33 @@
 ﻿using Newtonsoft.Json;
-using Tavstal.TLibrary.Models.Plugin;
-using UnityEngine;
+using Tavstal.TLibrary.Models.Config;
+using Tavstal.TLibrary.Models.Logging;
+using YamlDotNet.Serialization;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace Tavstal.TFly
 {
-    public class FlyConfig : ConfigurationBase
+    public class FlyConfig : YamlConfiguration
     {
-        [JsonProperty(Order = 3)]
+        [YamlMember(Order = 3, Description = "Forces swimming animation while flying for visual effect")]
         public bool FlyAnimationEnabled;
-        [JsonProperty(Order = 4)]
+        [YamlMember(Order = 4, Description = "Grants invincibility to the player while flying")]
         public bool GodModeWhenFlyEnabled;
-        [JsonProperty(Order = 5)]
-        public KeyCode AscendFlySpeedKeyCode;
-        [JsonProperty(Order = 6)]
-        public KeyCode DescendFlySpeedKeyCode;
-        [JsonProperty(Order = 7)]
+        [YamlMember(Order = 5, Description = "Cooldown in seconds between toggling flight mode")]
         public double CooldownInSeconds;
-        [JsonProperty(Order = 8)]
+        [YamlMember(Order = 6, Description = "Base movement speed multiplier when flying")]
         public float DefaultFlySpeed;
-        [JsonProperty(Order = 9)]
+        [YamlMember(Order = 7, Description = "Vertical movement increment per tick while flying up")]
         public float FlyUpSpeed;
-        [JsonIgnore]
+        [YamlIgnore]
         public readonly float Gravity = 0f;
 
         public override void LoadDefaults()
         {
-            DebugMode = false;
             Locale = "en";
+            LogLevel = ELogLevel.INFO;
             DownloadLocalePacks = true;
             FlyAnimationEnabled = true;
             GodModeWhenFlyEnabled = true;
-            AscendFlySpeedKeyCode = KeyCode.RightArrow;
-            DescendFlySpeedKeyCode = KeyCode.LeftArrow;
             CooldownInSeconds = 30;
             DefaultFlySpeed = 10f;
             FlyUpSpeed = 0.3f;
