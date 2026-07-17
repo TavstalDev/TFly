@@ -149,13 +149,13 @@ namespace Tavstal.TFly
            new Dictionary<string, string>
            {
              { "prefix", "&e[TFly]" },
-             { "success_fly_start", "&aYour flight mode has been &2enabled&a." },
-             { "success_fly_stop", "&aYour flight mode has been &cdisabled&a." },
-             { "success_fly_start_another", "&aYou have &2enabled &a{0}'s flight mode." },
-             { "success_fly_stop_another", "&aYou have &cdisabled &a{0}'s flight mode." },
-             { "success_fly_changed_all", "&aYou have changed everyone's flight mode." },
-             { "error_player_not_found", "&cThe specified player was not found."},
-             { "error_command_cooldown", "&cYou need to wait {0} second(s) to use this command." }
+             { "general_error_player_not_found", "&cThe specified player was not found."},
+             { "commands_common_error_cooldown", "&cYou need to wait {0} second(s) to use this command." },
+             { "commands_fly_start", "&aYour flight mode has been &2enabled&a." },
+             { "commands_fly_start_other", "&aYou have &2enabled &a{0}'s flight mode." },
+             { "commands_fly_stop", "&aYour flight mode has been &cdisabled&a." },
+             { "commands_fly_stop_other", "&aYou have &cdisabled &a{0}'s flight mode." },
+             { "commands_flyadmin_changed_all", "&aYou have changed everyone's flight mode." },
            };
 
         private void Update()

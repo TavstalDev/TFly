@@ -64,7 +64,7 @@ namespace Tavstal.TFly.Commands
                         comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
                         comp.SetIsFlying(true);
                     }
-                    Plugin.SendCommandReply(caller, "success_fly_changed_all");
+                    Plugin.SendCommandReply(caller, "commands_flyadmin_changed_all");
                     return Task.CompletedTask;
                 })
         };
@@ -78,7 +78,7 @@ namespace Tavstal.TFly.Commands
             UnturnedPlayer targetPlayer = UnturnedPlayer.FromName(args[0]);
             if (targetPlayer == null)
             {
-                Plugin.SendCommandReply(caller, "error_player_not_found", args[0]);
+                Plugin.SendCommandReply(caller, "general_error_player_not_found", args[0]);
                 return true;
             }
 
@@ -100,7 +100,7 @@ namespace Tavstal.TFly.Commands
             }
             comp.SetFlightMode(flyMode);
             comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
-            Plugin.SendCommandReply(caller, "success_fly_changed_all");
+            Plugin.SendCommandReply(caller, flyMode ? "commands_fly_start_other" : "commands_fly_stop_other", targetPlayer.CharacterName);
             return true;
         }
     }
