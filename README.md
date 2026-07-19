@@ -34,3 +34,11 @@ This plugin allows players to defy gravity and take flight.
 <br>
 <b>Permission(s):</b>  tshop.commands.cost.item
 </details>
+
+## License
+
+This project is licensed under the GNU General Public License v3.0. See the `LICENSE` file for more details.
+
+## Contact
+
+For issues or feature requests, please use the [GitHub issue tracker](https://github.com/TavstalDev/TFly/issues).
