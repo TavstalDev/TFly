@@ -23,9 +23,10 @@ namespace Tavstal.TFly
 
         public override void LoadDefaults()
         {
-            Locale = "en";
-            LogLevel = ELogLevel.INFO;
-            DownloadLocalePacks = true;
+            General = new GeneralConfig
+            {
+                MessageIcon = "https://raw.githubusercontent.com/TavstalDev/TFly/refs/heads/master/assets/icon.png"
+            };
             FlyAnimationEnabled = true;
             GodModeWhenFlyEnabled = true;
             CooldownInSeconds = 30;

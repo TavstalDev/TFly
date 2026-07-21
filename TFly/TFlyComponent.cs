@@ -86,7 +86,7 @@ namespace Tavstal.TFly
                 {
                     UpdateStance(EPlayerStance.SWIM);
                 }
-                UChatHelper.ServerSendChatMessage("commands_fly_start", toPlayer: Player.SteamPlayer());
+                UChatHelper.ServerSendChatMessage("commands_fly_start", toPlayer: Player.SteamPlayer(), icon:TFly.Instance.Config.General.MessageIcon);
             }
             else
             {
@@ -104,7 +104,7 @@ namespace Tavstal.TFly
                 {
                     UpdateStance(EPlayerStance.STAND);
                 }
-                UChatHelper.ServerSendChatMessage("commands_fly_stop", toPlayer: Player.SteamPlayer());
+                UChatHelper.ServerSendChatMessage("commands_fly_stop", toPlayer: Player.SteamPlayer(), icon: TFly.Instance.Config.General.MessageIcon);
             }
         }
 

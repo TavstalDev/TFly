@@ -23,7 +23,8 @@ namespace Tavstal.TFly.Commands
 
             if (DateTime.Now < comp.Cooldown && !player.HasPermission("tfly.commands.fly.admin"))
             {
-                TFly.Instance.SendCommandReply(caller, "commands_common_error_cooldown", Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
+                TFly.Instance.SendCommandReply(caller, "commands_common_error_cooldown", TFly.Instance.Config.General.MessageIcon,
+                    Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
                 return;
             }
 
