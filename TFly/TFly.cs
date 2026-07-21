@@ -3,6 +3,7 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System.Collections.Generic;
 using System.Text;
+using Rocket.Unturned;
 using Tavstal.TLibrary.Models.Plugin;
 using Tavstal.TLibrary.Extensions;
 using Tavstal.TLibrary.Models.Logging;
@@ -14,6 +15,7 @@ namespace Tavstal.TFly
     public class TFly : PluginBase<FlyConfig>
     {
         public static TFly Instance { get; private set; } = null!;
+        internal static readonly List<UnturnedPlayer> _flyingPlayers = new List<UnturnedPlayer>();
 
         public override void OnPreLoad()
         {
@@ -53,7 +55,7 @@ namespace Tavstal.TFly
             {
                 if (Config.DefaultFlySpeed < 0)
                 {
-                    Config.DefaultFlySpeed = 10;
+                    Config.DefaultFlySpeed = 5;
                     Config.Save();
 
                 }
@@ -64,6 +66,7 @@ namespace Tavstal.TFly
                     Config.Save();
                 }
 
+                U.Events.OnPlayerDisconnected += OnOnPlayerDisconnected;
                 Logger.Info($"# {GetPluginName()} has been loaded.");
             }
             catch (Exception ex)
@@ -76,11 +79,10 @@ namespace Tavstal.TFly
         {
             PlayerInput.onPluginKeyTick -= OnKeyDown;
             
-            foreach (SteamPlayer steamPlayer in Provider.clients)
+            foreach (UnturnedPlayer player in _flyingPlayers)
             {
                 try
                 {
-                    UnturnedPlayer player = UnturnedPlayer.FromSteamPlayer(steamPlayer);
                     FlyComponent comp = player.GetComponent<FlyComponent>();
                     if (comp.IsFlying)
                         comp.SetFlightMode(false);
@@ -91,10 +93,20 @@ namespace Tavstal.TFly
                 }
             }
             
+            U.Events.OnPlayerDisconnected -= OnOnPlayerDisconnected;
             Logger.Info($"# {GetPluginName()} has been successfully unloaded.");
         }
+        
+        private void OnOnPlayerDisconnected(UnturnedPlayer player)
+        {
+            if (!_flyingPlayers.Contains(player))
+                return;
+            
+            FlyComponent comp = player.GetComponent<FlyComponent>();
+            comp.SetFlightMode(false);
+        }
 
-        public void OnKeyDown(Player player, uint simulation, byte key, bool state)
+        private void OnKeyDown(Player player, uint simulation, byte key, bool state)
         {
             UnturnedPlayer uPlayer = UnturnedPlayer.FromPlayer(player);
             FlyComponent comp = uPlayer.GetComponent<FlyComponent>();
@@ -160,23 +172,36 @@ namespace Tavstal.TFly
 
         private void Update()
         {
-            foreach (SteamPlayer steamPlayer in Provider.clients)
+            if (_flyingPlayers.Count == 0)
+                return;
+            
+            foreach (var player in _flyingPlayers)
             {
-                UnturnedPlayer player = UnturnedPlayer.FromSteamPlayer(steamPlayer);
-                if (player.Player.input.keys[0])
-                    player.Player.movement.transform.position = new Vector3(player.Position.x, player.Position.y + Config.FlyUpSpeed, player.Position.z);
-                else if (player.Player.input.keys[5])
-                    player.Player.movement.sendPluginGravityMultiplier(1f);
-                else
-                {
-                    if (Config.FlyAnimationEnabled)
-                        player.GetComponent<FlyComponent>().UpdateStance(EPlayerStance.SWIM);
-                    player.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
-                }
-
+                var comp = player.GetComponent<FlyComponent>();
+                if (!comp.IsFlying)
+                    continue;
+                
                 // The player might break their leg when landing
                 if (player.Broken)
-                    player.Heal(10, null, false);
+                    player.Broken = false;
+                if (player.Bleeding)
+                    player.Bleeding = false;
+
+                if (player.Player.input.keys[0]) // Space
+                {
+                    player.Player.movement.sendPluginGravityMultiplier(-1f);
+                    continue;
+                }
+
+                if (player.Player.input.keys[5]) // Left Shift
+                {
+                    player.Player.movement.sendPluginGravityMultiplier(1f);
+                    continue;
+                }
+
+                if (Config.FlyAnimationEnabled && player.Stance != EPlayerStance.SWIM)
+                    player.GetComponent<FlyComponent>().UpdateStance(EPlayerStance.SWIM);
+                player.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
             }
         }
     }

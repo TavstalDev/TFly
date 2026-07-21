@@ -78,34 +78,31 @@ namespace Tavstal.TFly
                 IsFlying = true;
                 Player.Player.movement.sendPluginGravityMultiplier(TFly.Instance.Config.Gravity);
                 Player.Player.movement.sendPluginSpeedMultiplier(flySpeed);
+                TFly._flyingPlayers.Add(Player);
 
                 if (TFly.Instance.Config.GodModeWhenFlyEnabled)
                     Player.GodMode = true;
 
                 if (TFly.Instance.Config.FlyAnimationEnabled)
-                {
                     UpdateStance(EPlayerStance.SWIM);
-                }
-                UChatHelper.ServerSendChatMessage("commands_fly_start", toPlayer: Player.SteamPlayer(), icon:TFly.Instance.Config.General.MessageIcon);
+                TFly.Instance.SendChatMessage(Player.SteamPlayer(), "commands_fly_start", TFly.Instance.Config.General.MessageIcon);
+                return;
             }
-            else
-            {
-                if (!IsFlying)
-                    return;
+
+            if (!IsFlying)
+                return;
                 
-                IsFlying = false;
-                Player.Player.movement.sendPluginGravityMultiplier(1f);
-                Player.Player.movement.sendPluginSpeedMultiplier(1f);
+            IsFlying = false;
+            Player.Player.movement.sendPluginGravityMultiplier(1f);
+            Player.Player.movement.sendPluginSpeedMultiplier(1f);
+            TFly._flyingPlayers.Remove(Player);
+            
+            if (TFly.Instance.Config.GodModeWhenFlyEnabled)
+                Player.GodMode = false;
 
-                if (TFly.Instance.Config.GodModeWhenFlyEnabled)
-                    Player.GodMode = false;
-
-                if (TFly.Instance.Config.FlyAnimationEnabled)
-                {
-                    UpdateStance(EPlayerStance.STAND);
-                }
-                UChatHelper.ServerSendChatMessage("commands_fly_stop", toPlayer: Player.SteamPlayer(), icon: TFly.Instance.Config.General.MessageIcon);
-            }
+            if (TFly.Instance.Config.FlyAnimationEnabled)
+                UpdateStance(EPlayerStance.STAND);
+            TFly.Instance.SendChatMessage(Player.SteamPlayer(), "commands_fly_stop", TFly.Instance.Config.General.MessageIcon);
         }
 
         /// <summary>
@@ -114,11 +111,7 @@ namespace Tavstal.TFly
         /// <param name="newStance">The new stance to set for the player.</param>
         public void UpdateStance(EPlayerStance newStance)
         {
-            /*Player.Player.stance.channel.send("tellStance", ESteamCall.OWNER, ESteamPacket.UPDATE_UNRELIABLE_BUFFER, new object[]
-            {
-               (byte)newStance
-            });*/
-            //Player.Player.stance.stance = newStance;
+            Player.Player.stance.stance = newStance;
             Player.Player.stance.ReceiveStance(newStance);
         }
     }

@@ -30,7 +30,7 @@ namespace Tavstal.TFly
             FlyAnimationEnabled = true;
             GodModeWhenFlyEnabled = true;
             CooldownInSeconds = 30;
-            DefaultFlySpeed = 10f;
+            DefaultFlySpeed = 5f;
             FlyUpSpeed = 0.3f;
         }
 
