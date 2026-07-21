@@ -160,7 +160,7 @@ namespace Tavstal.TFly
         public override Dictionary<string, string> DefaultLocalization =>
            new Dictionary<string, string>
            {
-             { "prefix", "&e[TFly]" },
+             { "prefix", "&e[TFly] " },
              { "general_error_player_not_found", "&cThe specified player was not found."},
              { "commands_common_error_cooldown", "&cYou need to wait {0} second(s) to use this command." },
              { "commands_fly_start", "&aYour flight mode has been &2enabled&a." },
