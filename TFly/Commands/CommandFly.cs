@@ -32,13 +32,11 @@ namespace Tavstal.TFly.Commands
 
             if (cp.IsFlying)
             {
-                comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
                 comp.SetFlightMode(false);
                 comp.UpdateCooldown();
                 return;
             }
-           
-            comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
+            
             comp.SetFlightMode(true);
             comp.UpdateCooldown();
         }
