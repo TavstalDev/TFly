@@ -2,6 +2,7 @@
 using Rocket.Unturned.Player;
 using System;
 using System.Collections.Generic;
+using Tavstal.TFly.Utils;
 using Tavstal.TLibrary.Helpers.Unturned;
 // ReSharper disable UnusedType.Global
 
@@ -19,7 +20,9 @@ namespace Tavstal.TFly.Commands
         public void Execute(IRocketPlayer caller, string[] args)
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
-            FlyComponent comp = player.GetComponent<FlyComponent>();
+            FlyComponent? comp = ComponentManager.Get(player);
+            if (comp == null)
+                return;
 
             if (DateTime.Now < comp.Cooldown && !player.HasPermission("tfly.commands.fly.admin"))
             {
@@ -27,10 +30,8 @@ namespace Tavstal.TFly.Commands
                     Convert.ToInt32((comp.Cooldown - DateTime.Now).TotalSeconds).ToString());
                 return;
             }
-
-            FlyComponent cp = player.GetComponent<FlyComponent>();
-
-            if (cp.IsFlying)
+            
+            if (comp.IsFlying)
             {
                 comp.SetFlightMode(false);
                 comp.UpdateCooldown();

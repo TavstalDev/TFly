@@ -3,11 +3,11 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System.Collections.Generic;
 using System.Text;
-using Rocket.Unturned;
+using Tavstal.TFly.Handlers;
+using Tavstal.TFly.Utils;
 using Tavstal.TLibrary.Models.Plugin;
 using Tavstal.TLibrary.Extensions;
 using Tavstal.TLibrary.Models.Logging;
-using UnityEngine;
 
 namespace Tavstal.TFly
 {
@@ -66,7 +66,7 @@ namespace Tavstal.TFly
                     Config.Save();
                 }
 
-                U.Events.OnPlayerDisconnected += OnOnPlayerDisconnected;
+                UnturnedPlayerHandler.Attach();
                 Logger.Info($"# {GetPluginName()} has been loaded.");
             }
             catch (Exception ex)
@@ -77,13 +77,14 @@ namespace Tavstal.TFly
 
         public override void OnUnLoad()
         {
-            PlayerInput.onPluginKeyTick -= OnKeyDown;
-            
             foreach (UnturnedPlayer player in _flyingPlayers)
             {
                 try
                 {
-                    FlyComponent comp = player.GetComponent<FlyComponent>();
+                    FlyComponent? comp = ComponentManager.Get(player);
+                    if (comp  == null)
+                        continue;
+                    
                     if (comp.IsFlying)
                         comp.SetFlightMode(false);
                 }
@@ -92,69 +93,9 @@ namespace Tavstal.TFly
                     /* ignore */
                 }
             }
-            
-            U.Events.OnPlayerDisconnected -= OnOnPlayerDisconnected;
+
+            UnturnedPlayerHandler.Detach();
             Logger.Info($"# {GetPluginName()} has been successfully unloaded.");
-        }
-        
-        private void OnOnPlayerDisconnected(UnturnedPlayer player)
-        {
-            if (!_flyingPlayers.Contains(player))
-                return;
-            
-            FlyComponent comp = player.GetComponent<FlyComponent>();
-            comp.SetFlightMode(false);
-        }
-
-        private void OnKeyDown(Player player, uint simulation, byte key, bool state)
-        {
-            UnturnedPlayer uPlayer = UnturnedPlayer.FromPlayer(player);
-            FlyComponent comp = uPlayer.GetComponent<FlyComponent>();
-
-            if (!comp.IsFlying)
-                return;
-
-            if (!state)
-                return;
-            
-            
-            switch (key)
-            {
-                case 0:
-                {
-                    comp.SetFlySpeed(comp.FlySpeed + 1);
-                    uPlayer.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
-                    uPlayer.Player.movement.sendPluginSpeedMultiplier(comp.FlySpeed);
-
-                    if (Config.GodModeWhenFlyEnabled)
-                        uPlayer.GodMode = true;
-
-                    if (Config.FlyAnimationEnabled)
-                        comp.UpdateStance(EPlayerStance.SWIM);
-                    return;
-                }
-                case 1:
-                {
-                    if (comp.FlySpeed - 1 < 1)
-                        return;
-
-                    if (comp.FlySpeed <= 0)
-                        comp.SetFlySpeed(Config.DefaultFlySpeed);
-                    else
-                        comp.SetFlySpeed(comp.FlySpeed - 1);
-
-                    player.movement.sendPluginGravityMultiplier(Config.Gravity);
-                    player.movement.sendPluginSpeedMultiplier(comp.FlySpeed);
-
-                    if (Config.GodModeWhenFlyEnabled)
-                        uPlayer.GodMode = true;
-
-                    if (Config.FlyAnimationEnabled)
-                        comp.UpdateStance(EPlayerStance.SWIM);
-
-                    break;
-                }
-            }
         }
 
         public override Dictionary<string, string> DefaultLocalization =>
@@ -177,8 +118,11 @@ namespace Tavstal.TFly
             
             foreach (var player in _flyingPlayers)
             {
-                var comp = player.GetComponent<FlyComponent>();
-                if (!comp.IsFlying)
+                var comp = ComponentManager.Get(player);
+                if (!comp)
+                    continue;
+                
+                if (!comp!.IsFlying)
                     continue;
                 
                 // The player might break their leg when landing
@@ -200,7 +144,7 @@ namespace Tavstal.TFly
                 }
 
                 if (Config.FlyAnimationEnabled && player.Stance != EPlayerStance.SWIM)
-                    player.GetComponent<FlyComponent>().UpdateStance(EPlayerStance.SWIM);
+                    comp.UpdateStance(EPlayerStance.SWIM);
                 player.Player.movement.sendPluginGravityMultiplier(Config.Gravity);
             }
         }

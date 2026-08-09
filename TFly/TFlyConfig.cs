@@ -1,6 +1,4 @@
-﻿using Newtonsoft.Json;
-using Tavstal.TLibrary.Models.Config;
-using Tavstal.TLibrary.Models.Logging;
+﻿using Tavstal.TLibrary.Models.Config;
 using YamlDotNet.Serialization;
 // ReSharper disable ClassNeverInstantiated.Global
 

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Rocket.API;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
+using Tavstal.TFly.Utils;
 using Tavstal.TLibrary.Helpers.Unturned;
 using Tavstal.TLibrary.Models.Commands;
 using Tavstal.TLibrary.Models.Plugin;
@@ -46,7 +47,10 @@ namespace Tavstal.TFly.Commands
                     foreach (SteamPlayer steamPlayer in Provider.clients)
                     {
                         UnturnedPlayer target = UnturnedPlayer.FromSteamPlayer(steamPlayer);
-                        FlyComponent comp = target.GetComponent<FlyComponent>();
+                        FlyComponent? comp = ComponentManager.Get(target);
+                        if (comp == null)
+                            continue;
+                        
                         if (flyMode != null)
                         {
                             comp.SetFlySpeed(TFly.Instance.Config.DefaultFlySpeed);
@@ -82,7 +86,10 @@ namespace Tavstal.TFly.Commands
                 return true;
             }
 
-            FlyComponent comp = targetPlayer.GetComponent<FlyComponent>();
+            FlyComponent? comp = ComponentManager.Get(targetPlayer);
+            if (comp == null)
+                return true;
+            
             bool flyMode = !comp.IsFlying;
             if (args.Length == 2)
             {
